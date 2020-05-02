@@ -39,7 +39,6 @@ public class WaypointManager : MonoBehaviour
 			{
 				Handles.color = Color.white;
 			}
-
 			if (circularWaypointSystem)
 			{
 				//show line between last and first waypoint
@@ -54,7 +53,6 @@ public class WaypointManager : MonoBehaviour
 				}
 			}
 		}
-
 #endif
 	}
 }

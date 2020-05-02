@@ -326,17 +326,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints:
-  - position: {x: 4.2993846, y: 0, z: -12.021938}
+  - position: {x: -1.3846292, y: -0.41355515, z: -3.2066724}
     color: {r: 1, g: 1, b: 1, a: 1}
-  - position: {x: 14.492543, y: -0.29295206, z: -7.276324}
+  - position: {x: 0.05806446, y: 1.9366534, z: -2.895843}
     color: {r: 1, g: 1, b: 1, a: 1}
-  - position: {x: 12.871299, y: 1.6007996, z: 1.7891579}
+  - position: {x: 3.5274887, y: 1.6257231, z: 0.6051853}
     color: {r: 1, g: 1, b: 1, a: 1}
-  - position: {x: 3.383918, y: 2.1647067, z: 8.488361}
+  - position: {x: 1.3315802, y: 1.2158651, z: 2.901588}
     color: {r: 1, g: 1, b: 1, a: 1}
-  - position: {x: -0.9274175, y: 0.59878635, z: -0.3315525}
+  - position: {x: 0, y: 0, z: 2.355238}
     color: {r: 1, g: 1, b: 1, a: 1}
-  circularWaypointSystem: 0
+  circularWaypointSystem: 1
   addWaypointBetweenPoints: 0
   addWaypointAtEnd: 0
 --- !u!4 &1017484451

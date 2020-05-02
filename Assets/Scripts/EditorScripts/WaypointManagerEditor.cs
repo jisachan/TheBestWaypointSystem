@@ -28,15 +28,11 @@ public class WaypointManagerEditor : Editor
 
 	ReorderableList waypointList;
 
-	Camera camera;
-
 	void OnEnable()
 	{
 		Debug.Log("Hold down 'alt' and click in the sceneview to add a new waypoint.");
 		Debug.Log("Hold down 'ctrl' and right click on a waypoint in the scene view to select and mark it in both the sceneView and the editor.");
 		Debug.Log("Click on a waypoint in the editor list to select and mark it in both the sceneView and the editor.");
-
-		camera = Camera.main;
 
 		//target is the object you're inspecting in the inspector. 
 		//when making a custom editor, target is always the object you made the editor for.
@@ -138,7 +134,11 @@ public class WaypointManagerEditor : Editor
 
 	private void CreateNewWaypoint()
 	{
-		if (propertyAddWaypointBetween.boolValue == true)
+		if(waypointList.count == 0)
+		{
+			AddFirstWaypoint();
+		}
+		else if (propertyAddWaypointBetween.boolValue == true)
 		{
 			propertyAddWaypointAtEnd.boolValue = false;
 			Debug.Log(propertyAddWaypointAtEnd.boolValue.ToString());
@@ -153,6 +153,74 @@ public class WaypointManagerEditor : Editor
 		else
 		{
 			AddWaypointAtTheBeginning();
+		}
+	}
+
+	private void AddFirstWaypoint()
+	{
+		int insertIndex = 0;
+
+		//Change by using plane/floor/etc when applying to an actual game.
+		Vector3 newWaypointPosition = Vector3.zero;
+
+		waypointList.serializedProperty.InsertArrayElementAtIndex(insertIndex);
+		GetNewPropertyValues(insertIndex);
+		newPropertyPosition.vector3Value = newWaypointPosition;
+
+		newPropertyColor.colorValue = Color.white;
+	}
+
+	private void AddWaypointAtTheBeginning()
+	{
+		int insertIndex = 0;
+
+		SerializedProperty planeInPoint = waypointList.serializedProperty.GetArrayElementAtIndex(insertIndex);
+		SerializedProperty planeInPointPosition = planeInPoint.FindPropertyRelative("position");
+
+		Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+		Plane plane = new Plane(ray.direction, planeInPointPosition.vector3Value);
+
+		Vector3 newWaypointPosition = Vector3.zero;
+
+		if (plane.Raycast(ray, out float hitDistance))
+		{
+			newWaypointPosition = ray.origin + (ray.direction / 2) + (ray.direction * hitDistance);
+		}
+
+		waypointList.serializedProperty.InsertArrayElementAtIndex(insertIndex);
+		GetNewPropertyValues(insertIndex);
+		newPropertyPosition.vector3Value = newWaypointPosition;
+
+		if (newPropertyColor.colorValue == Color.red)
+		{
+			newPropertyColor.colorValue = Color.white;
+		}
+	}
+
+	private void AddWaypointAtTheEnd()
+	{
+		int insertIndex = waypointList.count - 1;
+		SerializedProperty planeInPoint = waypointList.serializedProperty.GetArrayElementAtIndex(insertIndex);
+		SerializedProperty planeInPointPosition = planeInPoint.FindPropertyRelative("position");
+
+		Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+		Plane plane = new Plane(ray.direction, planeInPointPosition.vector3Value);
+
+		Vector3 newWaypointPosition = Vector3.zero;
+
+		if (plane.Raycast(ray, out float hitDistance))
+		{
+			newWaypointPosition = ray.origin + (ray.direction / 2) + (ray.direction * hitDistance);
+		}
+
+		waypointList.serializedProperty.InsertArrayElementAtIndex(insertIndex);
+		GetNewPropertyValues(insertIndex + 1);
+		newPropertyPosition.vector3Value = newWaypointPosition;
+
+
+		if (newPropertyColor.colorValue == Color.red)
+		{
+			newPropertyColor.colorValue = Color.white;
 		}
 	}
 
@@ -203,59 +271,6 @@ public class WaypointManagerEditor : Editor
 		}
 	}
 
-	private void AddWaypointAtTheEnd()
-	{
-		int insertIndex = waypointList.count - 1;
-		SerializedProperty planeInPoint = waypointList.serializedProperty.GetArrayElementAtIndex(insertIndex);
-		SerializedProperty planeInPointPosition = planeInPoint.FindPropertyRelative("position");
-
-		Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-		Plane plane = new Plane(ray.direction, planeInPointPosition.vector3Value);
-
-		Vector3 newWaypointPosition = Vector3.zero;
-
-		if (plane.Raycast(ray, out float hitDistance))
-		{
-			newWaypointPosition = ray.origin + (ray.direction / 2) + (ray.direction * hitDistance);
-		}
-
-		waypointList.serializedProperty.InsertArrayElementAtIndex(insertIndex);
-		GetNewPropertyValues(insertIndex + 1);
-		newPropertyPosition.vector3Value = newWaypointPosition;
-
-
-		if (newPropertyColor.colorValue == Color.red)
-		{
-			newPropertyColor.colorValue = Color.white;
-		}
-	}
-
-	private void AddWaypointAtTheBeginning()
-	{
-		int insertIndex = 0;
-
-		SerializedProperty planeInPoint = waypointList.serializedProperty.GetArrayElementAtIndex(insertIndex);
-		SerializedProperty planeInPointPosition = planeInPoint.FindPropertyRelative("position");
-
-		Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-		Plane plane = new Plane(ray.direction, planeInPointPosition.vector3Value);
-
-		Vector3 newWaypointPosition = Vector3.zero;
-
-		if (plane.Raycast(ray, out float hitDistance))
-		{
-			newWaypointPosition = ray.origin + (ray.direction / 2) + (ray.direction * hitDistance);
-		}
-
-		waypointList.serializedProperty.InsertArrayElementAtIndex(insertIndex);
-		GetNewPropertyValues(insertIndex);
-		newPropertyPosition.vector3Value = newWaypointPosition;
-
-		if (newPropertyColor.colorValue == Color.red)
-		{
-			newPropertyColor.colorValue = Color.white;
-		}
-	}
 
 	private void DuringSceneGUI(SceneView sceneView)
 	{
