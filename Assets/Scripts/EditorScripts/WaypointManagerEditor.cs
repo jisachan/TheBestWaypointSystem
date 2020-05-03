@@ -160,8 +160,18 @@ public class WaypointManagerEditor : Editor
 	{
 		int insertIndex = 0;
 
-		//Change by using plane/floor/etc when applying to an actual game.
+		Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+
 		Vector3 newWaypointPosition = Vector3.zero;
+
+		if (Physics.Raycast(ray, out RaycastHit hitInfo))
+		{
+			newWaypointPosition = hitInfo.point;
+		}
+		else 
+		{
+			Debug.LogWarning("No terrain found. Waypoint was created at position 0,0,0.");
+		}
 
 		waypointList.serializedProperty.InsertArrayElementAtIndex(insertIndex);
 		GetNewPropertyValues(insertIndex);
@@ -182,7 +192,11 @@ public class WaypointManagerEditor : Editor
 
 		Vector3 newWaypointPosition = Vector3.zero;
 
-		if (plane.Raycast(ray, out float hitDistance))
+		if (Physics.Raycast(ray, out RaycastHit hitInfo))
+		{
+			newWaypointPosition = hitInfo.point;
+		}
+		else if (plane.Raycast(ray, out float hitDistance))
 		{
 			newWaypointPosition = ray.origin + (ray.direction / 2) + (ray.direction * hitDistance);
 		}
@@ -207,8 +221,11 @@ public class WaypointManagerEditor : Editor
 		Plane plane = new Plane(ray.direction, planeInPointPosition.vector3Value);
 
 		Vector3 newWaypointPosition = Vector3.zero;
-
-		if (plane.Raycast(ray, out float hitDistance))
+		if (Physics.Raycast(ray, out RaycastHit hitInfo))
+		{
+			newWaypointPosition = hitInfo.point;
+		}
+		else if (plane.Raycast(ray, out float hitDistance))
 		{
 			newWaypointPosition = ray.origin + (ray.direction / 2) + (ray.direction * hitDistance);
 		}
@@ -216,7 +233,6 @@ public class WaypointManagerEditor : Editor
 		waypointList.serializedProperty.InsertArrayElementAtIndex(insertIndex);
 		GetNewPropertyValues(insertIndex + 1);
 		newPropertyPosition.vector3Value = newWaypointPosition;
-
 
 		if (newPropertyColor.colorValue == Color.red)
 		{
@@ -256,7 +272,11 @@ public class WaypointManagerEditor : Editor
 
 		Vector3 newWaypointPosition = Vector3.zero;
 
-		if (plane.Raycast(ray, out float hitDistance))
+		if (Physics.Raycast(ray, out RaycastHit hitInfo))
+		{
+			newWaypointPosition = hitInfo.point;
+		}
+		else if (plane.Raycast(ray, out float hitDistance))
 		{
 			newWaypointPosition = ray.origin + (ray.direction / 2) + (ray.direction * hitDistance);
 		}
